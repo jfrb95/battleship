@@ -1,7 +1,6 @@
 export default function Ship(length) {
 
     let hits = 0;
-    let sunk = false;
 
     return {
         hit() {
@@ -15,7 +14,6 @@ export default function Ship(length) {
             } else {
                 return false;
             }
-            
         },
 
         get hits() {
