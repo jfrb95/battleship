@@ -5,28 +5,63 @@ const log = console.log;
 export default function Gameboard(size=10) {
     //place ships at specific coordinates by calling Ship
 
-    const board = [];
-
-    for (let i = 0; i < size; i+=1) {
-        const row = [];
-        for (let i = 0; i < size; i+=1) {
-            row.push('.');
+    const board = new Map();
+    for (let i = 0; i < 10; i+=1) {
+        for (let j = 0; j < 10; j+=1) {
+            board.set(`${i}${j}`, null);
         }
-        board.push(row);
+    }
+
+    const missedShots = new Set();
+
+    function coordsToKey(x, y) {
+        let key;
+
+        if (!y && Array.isArray(x)) {
+            key = x;
+        } else {
+            key = [x, y];
+        }
+
+        return `${key[0]}${key[1]}`;
     }
 
     function putShipAtCoordinate(ship, coordinate) {
-        
+        const key = coordsToKey(...coordinate);
+        board.set(key, ship);
     }
 
     return {
-        get boardString() {
-            const str = board.reduce(function boardToString(acc, curr) {
-                return acc.concat(curr.join(' ') + '\n');
-            }, '')
+        receiveAttack(coord) {
+            const key = coordsToKey(coord);
+
+            if (board.get(key) === null) {
+                missedShots.add(key);
+                return 'miss';
+            }
             
-            return str;
-        }
+            board.get(key).hit();
+            return 'hit';
+        },
+        allAreSunk() {
+            //currently returns true when no ships are on the board
+            //  might be an issue later
+            let result = true;
+            board.forEach(function shipIsSunk(value, key) {
+                if (value !== null && !value.isSunk()) {
+                    result = false;
+                }
+            })
+            return result;
+        },
+
+        get board() {
+            return board;
+        },
+        get missedShots() {
+            return missedShots;
+        },
+        putShipAtCoordinate
     }
     
 }
