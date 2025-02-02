@@ -26,7 +26,6 @@
     "webpack-dev-server": "^5.1.0",
     "webpack-merge": "^6.0.1"
   },
-  "type": "module",
   "babel": {
     "presets": [
       [
