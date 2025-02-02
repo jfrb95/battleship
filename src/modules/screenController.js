@@ -7,8 +7,6 @@ const log = console.log;
 
 export default function ScreenController() {
 
-    log(displaySquare);
-
     const boardContainer = document.querySelector('#board-container');
 
     const player1 = Player();
@@ -44,6 +42,6 @@ export default function ScreenController() {
         player2.gameboard.putShipAtCoordinate(ship23, [7, 9]);
     }());
 
-    const player1BoardDisplay = document.createElement('div');
-    
+    const player1BoardDisplay = displayBoard().render(boardContainer);
+    const player2BoardDisplay = displayBoard().render(boardContainer);
 }

@@ -1,3 +1,8 @@
+:root {
+    --size-of-square: 50px;
+    --size-of-board: calc((10 * var(--size-of-square)) + 11px);
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -38,10 +43,25 @@ li {
     list-style-type: none;
 }
 
+#board-container {
+    display: grid;
+    grid-template-columns: repeat(2, var(--size-of-board));
+    gap: 75px;
+}
+
 .empty-square {
-    border: 1px solid black;
     background-color: white;
 }
 .empty-square:hover {
-    background-color: grey;
+    background-color: lightgrey;
+}
+
+.display-board {
+    display: grid;
+    grid-template-columns: repeat(10, var(--size-of-square)); 
+    grid-template-rows: repeat(10, var(--size-of-square));
+    gap: 1px;
+    background-color: black;
+    max-width: var(--size-of-board);
+    border: solid 1px black;
 }
