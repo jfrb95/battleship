@@ -27,8 +27,12 @@ export function displayBoard() {
     const element = document.createElement('div');
     element.classList.add('display-board');
 
-    for (let i = 0; i < 100; i+=1) {
-        wrap(displaySquare());
+    for (let i = 0; i < 10; i+=1) {
+        for (let j = 0; j < 10; j+=1) {
+            const square = displaySquare();
+            square.element.id = `${i}${j}`;
+            wrap(square);
+        }
     }
 
     function wrap(...childComponents) {

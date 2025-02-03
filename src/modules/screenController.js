@@ -43,5 +43,16 @@ export default function ScreenController() {
     }());
 
     const player1BoardDisplay = displayBoard().render(boardContainer);
+    player1BoardDisplay.element.addEventListener("click", (event) => {
+        if (event.target.classList.contains("empty-square")) {
+            log(player1.gameboard.receiveAttack(event.target.id));
+        }
+    })
+    
     const player2BoardDisplay = displayBoard().render(boardContainer);
+
+    return {
+        
+    }
+
 }

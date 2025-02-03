@@ -3,7 +3,6 @@ import Ship from './ship.js';
 const log = console.log;
 
 export default function Gameboard(size=10) {
-    //place ships at specific coordinates by calling Ship
 
     const board = new Map();
     for (let i = 0; i < 10; i+=1) {
@@ -16,8 +15,7 @@ export default function Gameboard(size=10) {
 
     function coordsToKey(x, y) {
         let key;
-
-        if (!y && Array.isArray(x)) {
+        if (!y) {
             key = x;
         } else {
             key = [x, y];
@@ -54,6 +52,19 @@ export default function Gameboard(size=10) {
             })
             return result;
         },
+        //only small number of subscribers expected, so array is fine
+        subscribers: [],
+        subscribe(callback) {
+            this.subscribers.push(callback);
+        },
+        removeSubscriber(callback) {
+            this.subscribers = this.subscribers.filter((item) => item !== callback);
+        },
+        publish(data) {
+            for (const updateSubscriber of this.subscribers) {
+               updateSubscriber(data);
+            }
+        },
 
         get board() {
             return board;
@@ -61,6 +72,7 @@ export default function Gameboard(size=10) {
         get missedShots() {
             return missedShots;
         },
+
         putShipAtCoordinate
     }
     
