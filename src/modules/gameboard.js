@@ -52,20 +52,6 @@ export default function Gameboard(size=10) {
             })
             return result;
         },
-        //only small number of subscribers expected, so array is fine
-        subscribers: [],
-        subscribe(callback) {
-            this.subscribers.push(callback);
-        },
-        removeSubscriber(callback) {
-            this.subscribers = this.subscribers.filter((item) => item !== callback);
-        },
-        publish(data) {
-            for (const updateSubscriber of this.subscribers) {
-               updateSubscriber(data);
-            }
-        },
-
         get board() {
             return board;
         },

@@ -1,55 +1,134 @@
 import Gameboard from "./gameboard.js";
 import Player from "./player.js";
 import Ship from "./ship.js";
-import { displayBoard, displaySquare } from "./displayElements.js";
+import GameController from "./gameController.js";
 
 const log = console.log;
 
+/*
+desired flow:
+click on a square
+screenController registers click and sends info to gameController
+gameController uses info to update subscribers
+subscribers are screenController
+screenController updates screen
+
+*/
+
+
 export default function ScreenController() {
 
+    const game = GameController();
+    game.subscribe(updateSquare);
+
     const boardContainer = document.querySelector('#board-container');
+    const playButton = document.querySelector('#play-button');
+    
+    playButton.addEventListener('click', () => {});
 
-    const player1 = Player();
-    const player2 = Player();
-
-    (function tempInitPlayers() {
-        const ship11 = Ship(2);
-        const ship12 = Ship(3);
-        const ship13 = Ship(4);
-
-        player1.gameboard.putShipAtCoordinate(ship11, [3, 4]);
-        player1.gameboard.putShipAtCoordinate(ship11, [3, 5]);
-        player1.gameboard.putShipAtCoordinate(ship12, [1, 2]);
-        player1.gameboard.putShipAtCoordinate(ship12, [2, 2]);
-        player1.gameboard.putShipAtCoordinate(ship12, [3, 2]);
-        player1.gameboard.putShipAtCoordinate(ship13, [6, 7]);
-        player1.gameboard.putShipAtCoordinate(ship13, [7, 7]);
-        player1.gameboard.putShipAtCoordinate(ship13, [8, 7]);
-        player1.gameboard.putShipAtCoordinate(ship13, [9, 7]);
-
-        const ship21 = Ship(2);
-        const ship22 = Ship(3);
-        const ship23 = Ship(4);
-
-        player2.gameboard.putShipAtCoordinate(ship21, [4, 3]);
-        player2.gameboard.putShipAtCoordinate(ship21, [5, 3]);
-        player2.gameboard.putShipAtCoordinate(ship22, [2, 1]);
-        player2.gameboard.putShipAtCoordinate(ship22, [2, 2]);
-        player2.gameboard.putShipAtCoordinate(ship22, [2, 3]);
-        player2.gameboard.putShipAtCoordinate(ship23, [7, 6]);
-        player2.gameboard.putShipAtCoordinate(ship23, [7, 7]);
-        player2.gameboard.putShipAtCoordinate(ship23, [7, 8]);
-        player2.gameboard.putShipAtCoordinate(ship23, [7, 9]);
-    }());
-
-    const player1BoardDisplay = displayBoard().render(boardContainer);
-    player1BoardDisplay.element.addEventListener("click", (event) => {
+    //set up board displays
+    const playerBoards = [
+        DisplayBoard().render(boardContainer), 
+        DisplayBoard().render(boardContainer)
+    ];
+    
+    playerBoards[0].element.addEventListener("click", (event) => {
+        if (game.activePlayerIndex !== 0) {
+            return;
+        }
         if (event.target.classList.contains("empty-square")) {
-            log(player1.gameboard.receiveAttack(event.target.id));
+            game.playRound(event.target.id)
         }
     })
     
-    const player2BoardDisplay = displayBoard().render(boardContainer);
+    playerBoards[1].element.addEventListener("click", (event) => {
+        if (game.activePlayerIndex !== 1) {
+            return;
+        }
+        if (event.target.classList.contains("empty-square")) {
+            game.playRound(event.target.id)
+        }
+    })
+
+    //misc funcs
+    function updateSquare({activePlayerIndex, key, hitOrMiss}) {
+        log(activePlayerIndex);
+        const boardDisplay = playerBoards[activePlayerIndex];
+        const targetSquare = boardDisplay.element.querySelector(`[id="${key}"]`);
+        targetSquare.classList.replace('empty-square', hitOrMiss);
+    }
+
+    //display factory functions
+    function DisplayBoard() {
+        const element = document.createElement('div');
+        element.classList.add('display-board');
+
+        const squares = new Map();
+        for (let i = 0; i < 10; i+=1) {
+            for (let j = 0; j < 10; j+=1) {
+                const square = DisplaySquare(`${i}${j}`);
+                squares.set(`${i}${j}`, square);
+                wrap(square);
+            }
+        }
+
+        function wrap(...childComponents) {
+            for (const child of childComponents) {
+                element.appendChild(child.element);
+            }
+            return this;
+        }
+
+        return {
+            element,
+            render(parent=null) {
+
+                let target = document.body;
+
+                if (parent) {
+                    if (parent.element) {
+                        target = parent.element;
+                    }
+                    else {
+                        target = parent;
+                    }
+                }
+                target.appendChild(element);
+                
+                return this;
+            },
+            wrap
+        }
+    }
+
+    function DisplaySquare(id) {
+        const element = document.createElement('div');
+        element.classList.add('empty-square');
+        element.id = id;
+
+        //delete when finished:
+        element.textContent = id;
+
+        return {
+            element,
+            render(parent=null) {
+
+            let target = document.body;
+
+            if (parent) {
+                if (parent.element) {
+                    target = parent.element;
+                }
+                else {
+                    target = parent;
+                }
+            }
+            target.appendChild(element);
+            
+            return this;
+        },
+        }
+    }
 
     return {
         

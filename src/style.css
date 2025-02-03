@@ -1,5 +1,5 @@
 :root {
-    --size-of-square: 50px;
+    --size-of-square: 24px;
     --size-of-board: calc((10 * var(--size-of-square)) + 11px);
 }
 
@@ -46,7 +46,7 @@ li {
 #board-container {
     display: grid;
     grid-template-columns: repeat(2, var(--size-of-board));
-    gap: 75px;
+    gap: calc(1.5 * var(--size-of-square));
 }
 
 .empty-square {
@@ -54,6 +54,13 @@ li {
 }
 .empty-square:hover {
     background-color: lightgrey;
+}
+
+.hit {
+    background-color: red;
+}
+.miss {
+    background-color: blue;
 }
 
 .display-board {
