@@ -20,4 +20,13 @@ For next time:
     specified. For next time, I would like to try TDD for all
     the parts where it is useful (as seen on the video with the
     lady giving the talk on the topic).
+
+ - implement these:
+      Implement drag and drop to allow players to place their ships.
+      Create a 2-player option that lets users take turns by 
+         passing the laptop back and forth, or by spinning the 
+         monitor around on a desktop. Implement a ‘pass device’ 
+         screen so that players don’t see each other’s boards!
+      Polish the intelligence of the computer player by having 
+         it try adjacent slots after getting a ‘hit’.
 */

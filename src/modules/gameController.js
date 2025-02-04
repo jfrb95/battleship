@@ -9,10 +9,11 @@ export default function GameController() {
     let turnCount = 0;
 
     const player1 = Player();
-    const player2 = Player();
+    const player2 = Player('computer');
 
     let activePlayerIndex = 0;
     let activePlayer = player1;
+    let opposingPlayer = player2;
     const players = [player1, player2];
 
     (function _tempInitPlayers() {
@@ -58,13 +59,42 @@ export default function GameController() {
 
         publish(resultData);
         
+        if (opposingPlayer.gameboard.allAreSunk()) {
+            endGame(activePlayer);
+        }
+
         turnCount++;
-        switchPlayer();
+        _switchPlayer();
+
+        
+
+        if (activePlayer.type === 'computer') {
+            /*sleep(600)
+                .then(
+                    () => */playComputerRound(activePlayer)
+                /*)*/;
+            
+        }
     }
 
-    function switchPlayer() {
+    function _switchPlayer() {
+        opposingPlayer = activePlayer;
         activePlayerIndex = turnCount % 2;
         activePlayer = players[activePlayerIndex];
+    }
+
+    function playComputerRound(player) {
+        const key = player.randomKeyChoice();
+        playRound(key);
+    }
+
+    function endGame(winner) {
+        alert("winner");
+    }
+
+    //misc funcs
+    function sleep(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
     }
 
     //sub/pub

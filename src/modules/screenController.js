@@ -52,7 +52,6 @@ export default function ScreenController() {
 
     //misc funcs
     function updateSquare({activePlayerIndex, key, hitOrMiss}) {
-        log(activePlayerIndex);
         const boardDisplay = playerBoards[activePlayerIndex];
         const targetSquare = boardDisplay.element.querySelector(`[id="${key}"]`);
         targetSquare.classList.replace('empty-square', hitOrMiss);
